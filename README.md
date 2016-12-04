@@ -6,6 +6,9 @@ This is project is a python implementation of the Schnorr Zero-Knowledge Protoco
 
 
 
+Note: This project uses the following modules: sys, getopt, sys, ecc, PyCrypto, and socket.
+
+
 Usage: ./schnorr [OPTION]... [ARGS]...
 
 Authenticates someone using Schnorr Protocol over Elliptic Curves.   

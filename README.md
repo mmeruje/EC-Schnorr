@@ -4,7 +4,7 @@ This project is a python implementation of the Schnorr Zero-Knowledge Protocol o
 - ecc.py is a Python class that implements the Elliptic Curve operations needed;
 - schnorr.py implements the Schnorr Zero-Knowledge Protocol over.
 
-This project uses the following modules: sys, getopt, sys, ecc, PyCrypto, and socket.
+This project uses the following modules: sys, getopt, sys, PyCrypto, and socket.
 
 
 Usage: ./schnorr [OPTION]... [ARGS]...

@@ -7,10 +7,14 @@ This is project is a python implementation of the Schnorr Zero-Knowledge Protoco
 
 
 Usage: ./schnorr [OPTION]... [ARGS]...
- Authenticates someone using Schnorr Protocol over Elliptic Curves\n
- Shows this message if none of options is used.\n
-\n
- Mandatory arguments to long options are mandatory for short options too.\n
-  -gk, --generate-keys     Generates a Key Pair.\n
-  -a,  --authenticator     Uses a Public Key to authenticate a client.\n
-  -s,  --supplicant        Uses the Private Key to authenticate itself to a server.\n
+ Authenticates someone using Schnorr Protocol over Elliptic Curves.  
+ 
+ Shows this message if none of options is used.  
+  
+ Mandatory arguments to long options are mandatory for short options too.  
+ 
+  -gk, --generate-keys     Generates a Key Pair.  
+  
+  -a,  --authenticator     Uses a Public Key to authenticate a client.  
+  
+  -s,  --supplicant        Uses the Private Key to authenticate itself to a server.  

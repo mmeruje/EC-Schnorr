@@ -3,9 +3,9 @@ import getopt
 
 def bit_length(self):
    """This function returns the number of bits of self"""
-   s = bin(self)       # binary representation:  bin(-37) --> '-0b100101'
+   s = bin(self)       # binary representation:  bin(-37) -> '-0b100101'
    s = s.lstrip('-0b') # remove leading zeros and minus sign
-   return len(s)       # len('100101') --> 6
+   return len(s)       # len('100101') -> 6
 
 def modInverse(a, n):
    """This function calculates the inverse of a modulo n"""
@@ -127,3 +127,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

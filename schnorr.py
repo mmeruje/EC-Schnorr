@@ -6,7 +6,7 @@
 # Sistemas de Software Seguro
 # Computer Science MSc
 # Universidade da Beira Interior
-# Manuel Luis Gama Meruje, m6620
+# Manuel Meruje, m6620
 
 
 
@@ -14,6 +14,17 @@ import sys
 import ecc
 import Crypto.Util.number
 import socket 
+
+usage='''
+ Usage: ./schnorr [OPTION]... [ARGS]...
+ Authenticates someone using Schnorr Protocol over Elliptic Curves
+ Shows this message if none of options is used.
+
+ Mandatory arguments to long options are mandatory for short options too.
+  -gk,\t--generate-keys\tGenerates a Key Pair.
+  -a,\t--authenticator\tUses a Public Key to authenticate a client.
+  -s,\t--supplicant\tUses the Private Key to authenticate itself to a server.\n
+'''
 
 host = 'localhost' 
 port = 6666
@@ -27,30 +38,15 @@ def generate_keys():
 	""" 
 	Supplicant Mode - Key Generation
 	""" 
-	# ##############################################
-	#
-	# 	o seguinte pedaço de código está comentado 
-	# 	devido à sua complexidade (a nível temporal)
-	# 	e o protocolo para que este pudesse ser implementado
-	#
-	# ##############################################
-	# # gerar primo P
-	# p = Crypto.Util.number.getStrongPrime(size) 
-	# while 1:
-	# 	# gerar primo Q que divida P-1
-	# 	q = Crypto.Util.number.getPrime(size)
-	# 	if ((p-1)%q == 0):
-	# 		break
-	# ##############################################
 	
-	# selecionar uma curva eliptica - definida em ECcurve
+	# Select an elliptic curve [it is defined in ecc.py]
 	ec=ecc.ECcurve()
 
-	# a = r <- {0, ..., Q − 1} [Alice calcula a chave privada a.]
+	# a = r <- {0, ..., Q − 1} [Alice calculates the private key.]
 	print "*  Generating an a random number. (Private Key)"
 	a = Crypto.Util.number.getRandomRange(0, (q-1))
 
-	# v = −a.G(modP) [Alice calcula a chave pública v (um ponto na curva elíptica).]
+	# v = −a.G(modP) [Alice calculates the public key v (a point in the elliptic curve).]
 	# v = (-a*ec_G) % p
 
 	# atenção à coordenada y! G = (xi, xf)
@@ -87,7 +83,7 @@ def supplicant(a):
 	
 	print "\n*  Connected to Bob (Authenticator)."
 	
-	# GERA UM NUMERO R para usar em  x=r.G(modP) para calcular um ponto na curva eliptica
+	#Generate a number R to use in  [ x=r.G(modP) ] to calculate a point on the elliptic curve
 	print "*  Generating a r random number."
 	ec= ecc.ECcurve()
 	r = Crypto.Util.number.getRandomRange(0, (q-1))
@@ -103,7 +99,7 @@ def supplicant(a):
 	#aChannel.send(str(x.x))
 	#aChannel.send(str(x.y))
 
-	# enviar x
+	# send x
 	# print "\n<- sending X."
 	print "\tXx: " + hex(x.x)
 	print "\tXy: " + hex(x.y)
@@ -111,7 +107,7 @@ def supplicant(a):
 	aChannel.send(str(x.y))
 	print "\n<- X sent."
 
-	# receber e
+	# receive e
 	#print "\n-> Receiving e."
 	e = aChannel.recv(dataSize)
 	e = int(e)
@@ -125,16 +121,15 @@ def supplicant(a):
 		return
 
 
-	# Alice verifica que o valor de e está no intervalo apropriado
+	# Alice verifies that the value [e] is in the appropriate interval
 
-
-	# calcular Y
+	# calculate Y
 	#print "\n*  Calculating y."
 	y = a*e + r
 	print "\n*  y was calculed."
 	print "\ty: " + hex(y)
 
-	# enviar y
+	# send  y
 	# print "\n<- sending y."
 	aChannel.send(str(y))
 	print "\n<- y sent."
@@ -168,7 +163,7 @@ def authenticator(v):
 	#print "\tVx: " + hex(v.x)
 	#print "\tVy: " + hex(v.y)
 
-	# receber x
+	# receives x
 	xx = bChannel.recv(dataSize) 
 	xy = bChannel.recv(dataSize) 
 	x  = ecc.ECPoint(int(xx), int(xy))
@@ -176,21 +171,21 @@ def authenticator(v):
 	print "\txx: " + hex(x.x)
 	print "\txy: " + hex(x.y)
 
-	# gera e
+	# generates e
 	e = Crypto.Util.number.getRandomRange(0, 2**80)
 	print "\n*  e generated.\n\t e: " + hex(e)
-	# envia e
+	# send e
 	bChannel.send(str(e))
 	print "\n<- e sent."
 
-	# receber y
+	# receive y
 	y = bChannel.recv(dataSize) 
 	y = int(y)
 	print "\n-> y received with the following value: "
 	print "\ty: " + hex(y)
 
 
-	# calcular z
+	# calculate z
 	ec= ecc.ECcurve()
 	z = ecc.ECPoint(ec.xi, ec.yi)
 	z = z.multiplyPointByScalar(y)
@@ -198,7 +193,7 @@ def authenticator(v):
 	
 	z = z.sum(v)
 	
-	# verifiar z e x
+	# verify z e x
 	print "\n\n*  Final Result: \n"
 	if z.x == x.x and z.y == x.y:
 		print "\t\tSuccess!"
@@ -216,24 +211,6 @@ def main():
 		print "*  Key Generation Mode Activated"
 		keys=generate_keys()
 		
-		# ##############################################################
-		#
-		# o seguinte pedaço de código não é executado
-		# uma vez que a chave pública é inserida aquando
-		# da execução do aplicativo em modo --authenticator
-		# pelo que o autenticador (Bob) deve ter acesso à chave 
-		# pública directamente em algum sítio, e.g., conversa
-		# de café; "download" no site pessoal internet do cliente; ...
-		#
-		# ##############################################################
- 		#
-		# # chamar supplicant()
-		#a = keys[0]
-	 	#print "\n*  Alice Mode Activated."
-	 	#print "*  a = " + str(a)
-		#supplicant(keys[0])
-		# ##############################################################
-
 	elif (("--supplicant" in sys.argv) or ("-s" in sys.argv)) and (len(sys.argv)==3) :
 		# chamar supplicant()
 		a = int(sys.argv[2])
@@ -253,20 +230,15 @@ def main():
 	 	print "*  Trying to listen to Alice."
 		authenticator(v)
 
+	elif (("--generate-keys" in sys.argv) or ("-gk") in sys.argv) and (("--supplicant" in sys.argv) or ("-s" in sys.argv)) or ((("--generate-keys" in sys.argv) or ("-gk") in sys.argv) and (("--authenticator" in sys.argv) or ("-a" in sys.argv))) or ((("--supplicant" in sys.argv) or ("-s" in sys.argv)) and (("--authenticator" in sys.argv) or ("-a" in sys.argv))):
+		#
+		print usage
+		print "\n\n Use only one of the modes, please."
 	else:
-		# caso contrŕario mostrar mensagem de erro / ajuda
-		usage='''
- Usage: ./schnorr [OPTION]... [ARGS]...
- Authenticates someone using Schnorr Protocol over Elliptic Curves
- Shows this message if none of options is used.
-
- Mandatory arguments to long options are mandatory for short options too.
-  -gk,\t--generate-keys\tGenerates a Key Pair.
-  -a,\t--authenticator\tUses a Public Key to authenticate a client.
-  -s,\t--supplicant\tUses the Private Key to authenticate itself to a server.\n
-		'''
+		# otherwise show usage.
 		print usage
 
 
 if __name__ == "__main__":
 	main()
+

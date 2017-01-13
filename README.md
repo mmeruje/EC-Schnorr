@@ -21,7 +21,7 @@ Options:
 
 Usage example:
 
-1. Keypair Generation:
+Keypair Generation:
 ```
 mmeruje@mycomputer:~/$ ./schnorr.py -gk
 *  Key Generation Mode Activated
@@ -34,11 +34,11 @@ v(x,-) = 241010344193812168014432711399629693373018093471884903517
 v(-,y) = 2306444403712286640989713776754269629962048798612334189144
 ```
 
-2. Run Authenticator (Server):
+Run Authenticator (Server):
 ```
 mmeruje@server:~/$ ./schnorr.py -a 241010344193812168014432711399629693373018093471884903517 2306444403712286640989713776754269629962048798612334189144
 ```
-3. Run Supplicant (Client)
+Run Supplicant (Client)
 ```
 mmeruje@client:~/$ ./schnorr.py -s 1742413906660797398263574261320583321084828220183690165741
 ```

@@ -3,7 +3,7 @@
 
 
 # Schnorr Protocol over Elliptic Curves
-# Sistemas de Software Seguro
+# Sistemas de Software Seguro (Secure Software Systems)
 # Computer Science MSc
 # Universidade da Beira Interior
 # Manuel Meruje, m6620
@@ -155,7 +155,7 @@ def authenticator(v):
 
 	print "*  Alice is connected."
 
-	# receber v
+	# receive v
 	#vx = bChannel.recv(dataSize)
 	#vy = bChannel.recv(dataSize)
 	#v  = ecc.ECPoint(int(vx), int(vy))
@@ -207,7 +207,7 @@ def authenticator(v):
 def main():
 
 	if (("--generate-keys" in sys.argv) or ("-gk") in sys.argv) and (len(sys.argv)==2):
-		# chamar generate_keys()
+		# call generate_keys()
 		print "*  Key Generation Mode Activated"
 		keys=generate_keys()
 		
@@ -219,7 +219,7 @@ def main():
 		supplicant(a)
 
 	elif (("--authenticator" in sys.argv) or ("-a" in sys.argv)) and (len(sys.argv)==4) :
-		# chamar authenticator()
+		# call authenticator()
 	 	print "*  Bob Mode Activated (Authenticator Mode)"
 	 	print "*  This will be the public key used in the authentication:"
 		vx = int(sys.argv[2])
